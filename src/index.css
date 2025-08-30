@@ -8,35 +8,57 @@ All colors MUST be HSL.
 
 @layer base {
   :root {
-    --background: 0 0% 100%;
-    --foreground: 222.2 84% 4.9%;
+    /* Dark container management theme */
+    --background: 0 0% 8%;
+    --foreground: 0 0% 98%;
 
-    --card: 0 0% 100%;
-    --card-foreground: 222.2 84% 4.9%;
+    --card: 0 0% 12%;
+    --card-foreground: 0 0% 98%;
 
-    --popover: 0 0% 100%;
-    --popover-foreground: 222.2 84% 4.9%;
+    --popover: 0 0% 12%;
+    --popover-foreground: 0 0% 98%;
 
-    --primary: 222.2 47.4% 11.2%;
-    --primary-foreground: 210 40% 98%;
+    --primary: 210 100% 56%;
+    --primary-foreground: 0 0% 98%;
 
-    --secondary: 210 40% 96.1%;
-    --secondary-foreground: 222.2 47.4% 11.2%;
+    --secondary: 0 0% 20%;
+    --secondary-foreground: 0 0% 98%;
 
-    --muted: 210 40% 96.1%;
-    --muted-foreground: 215.4 16.3% 46.9%;
+    --muted: 0 0% 15%;
+    --muted-foreground: 0 0% 65%;
 
-    --accent: 210 40% 96.1%;
-    --accent-foreground: 222.2 47.4% 11.2%;
+    --accent: 0 0% 18%;
+    --accent-foreground: 0 0% 98%;
 
-    --destructive: 0 84.2% 60.2%;
-    --destructive-foreground: 210 40% 98%;
+    --destructive: 0 84% 60%;
+    --destructive-foreground: 0 0% 98%;
 
-    --border: 214.3 31.8% 91.4%;
-    --input: 214.3 31.8% 91.4%;
-    --ring: 222.2 84% 4.9%;
+    --border: 0 0% 20%;
+    --input: 0 0% 15%;
+    --ring: 210 100% 56%;
 
-    --radius: 0.5rem;
+    /* Container management specific colors */
+    --container-card: 0 65% 45%;
+    --container-card-foreground: 0 0% 98%;
+    --container-running: 120 65% 45%;
+    --container-stopped: 0 0% 50%;
+    
+    --golden: 45 100% 65%;
+    --golden-foreground: 0 0% 15%;
+    
+    --orange-action: 30 100% 60%;
+    --red-action: 0 80% 55%;
+    --gray-action: 0 0% 45%;
+    
+    --terminal-bg: 0 0% 5%;
+    --file-folder: 45 85% 60%;
+    --file-document: 0 70% 55%;
+
+    /* Geometric backgrounds */
+    --bg-pattern: linear-gradient(135deg, hsl(0 0% 5%) 0%, hsl(0 10% 8%) 50%, hsl(0 0% 3%) 100%);
+    --card-glow: 0 0 40px hsl(var(--container-card) / 0.3);
+    
+    --radius: 0.75rem;
 
     --sidebar-background: 0 0% 98%;
 

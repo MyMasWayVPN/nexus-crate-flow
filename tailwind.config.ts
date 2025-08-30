@@ -52,6 +52,27 @@ export default {
 					DEFAULT: 'hsl(var(--card))',
 					foreground: 'hsl(var(--card-foreground))'
 				},
+				// Container management colors
+				container: {
+					DEFAULT: 'hsl(var(--container-card))',
+					foreground: 'hsl(var(--container-card-foreground))',
+					running: 'hsl(var(--container-running))',
+					stopped: 'hsl(var(--container-stopped))'
+				},
+				golden: {
+					DEFAULT: 'hsl(var(--golden))',
+					foreground: 'hsl(var(--golden-foreground))'
+				},
+				actions: {
+					orange: 'hsl(var(--orange-action))',
+					red: 'hsl(var(--red-action))',
+					gray: 'hsl(var(--gray-action))'
+				},
+				terminal: 'hsl(var(--terminal-bg))',
+				files: {
+					folder: 'hsl(var(--file-folder))',
+					document: 'hsl(var(--file-document))'
+				},
 				sidebar: {
 					DEFAULT: 'hsl(var(--sidebar-background))',
 					foreground: 'hsl(var(--sidebar-foreground))',
