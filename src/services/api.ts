@@ -1,4 +1,5 @@
-const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:3001/api';
+// @ts-ignore
+const API_BASE_URL = import.meta.env?.VITE_API_URL || 'http://localhost:3001/api';
 
 class ApiService {
   private token: string | null = null;
@@ -60,7 +61,7 @@ class ApiService {
   }
 
   async getProfile() {
-    return this.request<any>('/auth/me');
+    return this.request<any>('/auth/profile');
   }
 
   async updateProfile(data: any) {
