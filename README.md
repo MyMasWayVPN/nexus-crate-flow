@@ -211,7 +211,7 @@ UPLOAD_PATH=./uploads
 
 2. **Clone and setup**
    ```bash
-   git clone <repository-url>
+   git clone https://github.com/MyMasWayVPN/nexus-crate-flow.git
    cd nexus-crate-flow
    npm run setup
    ```
@@ -361,3 +361,4 @@ For support, please open an issue on GitHub or contact the development team.
 ---
 
 **Built with ❤️ for modern container management**
+
