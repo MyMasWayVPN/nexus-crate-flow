@@ -1,14 +1,18 @@
 {
-  "name": "vite_react_shadcn_ts",
+  "name": "nexus-crate-flow",
   "private": true,
-  "version": "0.0.0",
+  "version": "1.0.0",
   "type": "module",
   "scripts": {
     "dev": "vite",
     "build": "vite build",
     "build:dev": "vite build --mode development",
     "lint": "eslint .",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "start:dev": "node start-dev.js",
+    "setup": "npm install && cd backend && npm install",
+    "backend": "cd backend && npm run dev",
+    "frontend": "vite"
   },
   "dependencies": {
     "@hookform/resolvers": "^3.10.0",

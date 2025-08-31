@@ -1,103 +1,60 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import { useAuth } from "@/contexts/AuthContext";
+import { useContainer } from "@/contexts/ContainerContext";
 import LoginPage from "@/components/LoginPage";
 import DashboardContainer from "@/components/DashboardContainer";
 import ConsoleLogScript from "@/components/ConsoleLogScript";
 import FileManager from "@/components/FileManager";
 import SettingsContainer from "@/components/SettingsContainer";
-import { useToast } from "@/hooks/use-toast";
+import { Button } from "@/components/ui/button";
+import { Loader2 } from "lucide-react";
 
-interface Container {
-  id: string;
-  name: string;
-  status: "Running" | "Stop";
-  folder: string;
-}
-
-type ViewType = "login" | "dashboard" | "console" | "files" | "settings";
+type ViewType = "dashboard" | "console" | "files" | "settings";
 
 const Index = () => {
-  const [currentView, setCurrentView] = useState<ViewType>("login");
-  const [selectedContainer, setSelectedContainer] = useState<Container | null>(null);
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
-  const { toast } = useToast();
+  const [currentView, setCurrentView] = useState<ViewType>("dashboard");
+  const { isAuthenticated, isLoading: authLoading } = useAuth();
+  const { selectedContainer, selectContainer } = useContainer();
 
-  // Sample data
-  const [containers] = useState<Container[]>([
-    { id: "werfyiu4erfd", name: "Nama Container", status: "Running", folder: "/home/data/werfyiu4erfd" },
-    { id: "yuh3rd6y6", name: "Nama Container", status: "Running", folder: "/home/data/yuh3rd6y6" },
-    { id: "werfegverytg", name: "Nama Container", status: "Running", folder: "/home/data/werfegverytg" },
-    { id: "sfergrth", name: "Nama Container", status: "Stop", folder: "/home/data/sfergrth" },
-    { id: "grtgt4Gref", name: "Nama Container", status: "Running", folder: "/home/data/grtgt4Gref" },
-    { id: "ert5erfferrt", name: "Nama Container", status: "Running", folder: "/home/data/ert5erfferrt" },
-    { id: "erte5d4rtfg", name: "Nama Container", status: "Running", folder: "/home/data/erte5d4rtfg" },
-  ]);
-
-  const [consoleLogs] = useState<string[]>([
-    "Starting application...",
-    "Server listening on port 3000",
-    "Database connected successfully",
-    "Application ready"
-  ]);
-
-  const [files] = useState([
-    { name: "app.js", type: "file" as const, size: "12.5KB", date: "12-09-20025" },
-    { name: "config", type: "folder" as const, size: "-", date: "12-09-20025" },
-    { name: "package.json", type: "file" as const, size: "2.1KB", date: "12-09-20025" },
-    { name: "node_modules", type: "folder" as const, size: "-", date: "12-09-20025" },
-    { name: "start.js", type: "file" as const, size: "1.8KB", date: "12-09-20025" },
-  ]);
-
-  const handleLogin = (username: string, password: string) => {
-    // Simple demo authentication
-    if (username && password) {
-      setIsLoggedIn(true);
+  // Reset view when authentication changes
+  useEffect(() => {
+    if (!isAuthenticated) {
       setCurrentView("dashboard");
-      toast({
-        title: "Login berhasil",
-        description: "Selamat datang di Container Management System",
-      });
-    } else {
-      toast({
-        title: "Login gagal",
-        description: "Username atau password salah",
-        variant: "destructive",
-      });
+      selectContainer(null);
     }
-  };
+  }, [isAuthenticated, selectContainer]);
 
-  const handleLogout = () => {
-    setIsLoggedIn(false);
-    setCurrentView("login");
-    setSelectedContainer(null);
-    toast({
-      title: "Logout berhasil",
-      description: "Anda telah keluar dari sistem",
-    });
-  };
-
-  const handleSelectContainer = (container: Container) => {
-    setSelectedContainer(container);
+  const handleSelectContainer = (container: any) => {
+    selectContainer(container);
     setCurrentView("console");
   };
 
-  const handleCreateContainer = () => {
-    toast({
-      title: "Fitur dalam pengembangan",
-      description: "Fitur membuat container akan segera tersedia",
-    });
+  const handleBackToDashboard = () => {
+    setCurrentView("dashboard");
   };
+
+  // Show loading screen while checking authentication
+  if (authLoading) {
+    return (
+      <div className="min-h-screen bg-background flex items-center justify-center">
+        <div className="text-center">
+          <Loader2 className="w-8 h-8 animate-spin text-golden mx-auto mb-4" />
+          <p className="text-muted-foreground">Memuat aplikasi...</p>
+        </div>
+      </div>
+    );
+  }
+
+  // Show login page if not authenticated
+  if (!isAuthenticated) {
+    return <LoginPage />;
+  }
 
   const renderCurrentView = () => {
     switch (currentView) {
-      case "login":
-        return <LoginPage onLogin={handleLogin} />;
-      
       case "dashboard":
         return (
           <DashboardContainer
-            containers={containers}
-            onCreateContainer={handleCreateContainer}
-            onLogout={handleLogout}
             onSelectContainer={handleSelectContainer}
           />
         );
@@ -106,12 +63,8 @@ const Index = () => {
         return selectedContainer ? (
           <ConsoleLogScript
             containerName={selectedContainer.name}
-            logs={consoleLogs}
-            onStart={() => toast({ title: "Script started" })}
-            onRestart={() => toast({ title: "Script restarted" })}
-            onStop={() => toast({ title: "Script stopped" })}
-            onLogout={handleLogout}
-            onBack={() => setCurrentView("dashboard")}
+            containerId={selectedContainer.id}
+            onBack={handleBackToDashboard}
           />
         ) : null;
       
@@ -119,11 +72,9 @@ const Index = () => {
         return selectedContainer ? (
           <FileManager
             containerName={selectedContainer.name}
+            containerId={selectedContainer.id}
             currentPath={selectedContainer.folder}
-            files={files}
-            onLogout={handleLogout}
-            onBack={() => setCurrentView("dashboard")}
-            onNavigate={(path) => toast({ title: `Navigating to ${path}` })}
+            onBack={handleBackToDashboard}
           />
         ) : null;
       
@@ -131,18 +82,8 @@ const Index = () => {
         return selectedContainer ? (
           <SettingsContainer
             containerName={selectedContainer.name}
-            startupScript="node start.js"
-            cloudflaredToken="eywuygdbffji"
-            tunnelEnabled={false}
-            logs={[]}
-            onLogout={handleLogout}
-            onBack={() => setCurrentView("dashboard")}
-            onUpdateScript={() => toast({ title: "Script updated" })}
-            onUpdateToken={() => toast({ title: "Token updated" })}
-            onToggleTunnel={() => toast({ title: "Tunnel toggled" })}
-            onStopContainer={() => toast({ title: "Container stopped" })}
-            onRestartContainer={() => toast({ title: "Container restarted" })}
-            onDeleteContainer={() => toast({ title: "Container deleted", variant: "destructive" })}
+            containerId={selectedContainer.id}
+            onBack={handleBackToDashboard}
           />
         ) : null;
       
@@ -155,27 +96,37 @@ const Index = () => {
     <div>
       {renderCurrentView()}
       
-      {/* Navigation hint for demo */}
-      {isLoggedIn && selectedContainer && (
-        <div className="fixed bottom-4 right-4 space-y-2">
-          <button
+      {/* Navigation buttons when container is selected */}
+      {selectedContainer && (
+        <div className="fixed bottom-4 right-4 space-y-2 z-50">
+          <Button
             onClick={() => setCurrentView("console")}
-            className="block w-full bg-primary text-primary-foreground px-4 py-2 rounded-lg text-sm"
+            variant={currentView === "console" ? "default" : "secondary"}
+            className="block w-full rounded-lg text-sm"
           >
             Console
-          </button>
-          <button
+          </Button>
+          <Button
             onClick={() => setCurrentView("files")}
-            className="block w-full bg-golden text-golden-foreground px-4 py-2 rounded-lg text-sm"
+            variant={currentView === "files" ? "default" : "secondary"}
+            className="block w-full rounded-lg text-sm"
           >
             Files
-          </button>
-          <button
+          </Button>
+          <Button
             onClick={() => setCurrentView("settings")}
-            className="block w-full bg-container text-container-foreground px-4 py-2 rounded-lg text-sm"
+            variant={currentView === "settings" ? "default" : "secondary"}
+            className="block w-full rounded-lg text-sm"
           >
             Settings
-          </button>
+          </Button>
+          <Button
+            onClick={handleBackToDashboard}
+            variant="outline"
+            className="block w-full rounded-lg text-sm"
+          >
+            Dashboard
+          </Button>
         </div>
       )}
     </div>
